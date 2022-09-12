@@ -3,10 +3,8 @@ import mongoose from "mongoose";
 
 const User = new mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: true,
-    },
+    fname: { type: String, required: true },
+    lname: { type: String, required: true },
     email: {
       type: String,
       required: true,
@@ -16,11 +14,6 @@ const User = new mongoose.Schema(
       type: String,
       required: true,
     },
-    images: 
-      {
-        name: String,
-        path: String,
-      },
   },
   {
     collection: "users",

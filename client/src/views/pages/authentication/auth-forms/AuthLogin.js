@@ -20,6 +20,9 @@ import {
     Typography,
     useMediaQuery
 } from '@mui/material';
+import Axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 
 // third party
 import * as Yup from 'yup';
@@ -28,6 +31,7 @@ import { Formik } from 'formik';
 // project imports
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import env from '../../../../env.json';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
@@ -37,13 +41,14 @@ import Google from 'assets/images/icons/social-google.svg';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
-const FirebaseLogin = ({ ...others }) => {
+const Login = ({ ...others }) => {
+    let navigate = useNavigate();
     const theme = useTheme();
     const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
     const customization = useSelector((state) => state.customization);
     const [checked, setChecked] = useState(true);
-
+    const [msg, setMsg] = useState({});
     const googleHandler = async () => {
         console.error('Login');
     };
@@ -60,7 +65,7 @@ const FirebaseLogin = ({ ...others }) => {
     return (
         <>
             <Grid container direction="column" justifyContent="center" spacing={2}>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                     <AnimateButton>
                         <Button
                             disableElevation
@@ -80,7 +85,7 @@ const FirebaseLogin = ({ ...others }) => {
                             Sign in with Google
                         </Button>
                     </AnimateButton>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12}>
                     <Box
                         sx={{
@@ -89,7 +94,6 @@ const FirebaseLogin = ({ ...others }) => {
                         }}
                     >
                         <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
-
                         <Button
                             variant="outlined"
                             sx={{
@@ -107,7 +111,6 @@ const FirebaseLogin = ({ ...others }) => {
                         >
                             OR
                         </Button>
-
                         <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
                     </Box>
                 </Grid>
@@ -117,31 +120,44 @@ const FirebaseLogin = ({ ...others }) => {
                     </Box>
                 </Grid>
             </Grid>
-
+            {msg.sucess ? (
+                <Alert severity="success">
+                    {msg.sucess}
+                </Alert>
+            ) : (
+                ''
+            )}
+            {msg.error ? (
+                <Alert severity="error">
+                    {msg.error}
+                </Alert>
+            ) : (
+                ''
+            )}
             <Formik
                 initialValues={{
-                    email: 'info@codedthemes.com',
-                    password: '123456',
-                    submit: null
+                    email: '',
+                    password: ''
                 }}
                 validationSchema={Yup.object().shape({
                     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-                    try {
-                        if (scriptedRef.current) {
-                            setStatus({ success: true });
-                            setSubmitting(false);
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        if (scriptedRef.current) {
-                            setStatus({ success: false });
-                            setErrors({ submit: err.message });
-                            setSubmitting(false);
-                        }
-                    }
+                    Axios.post(`${env.API_URL}/user/login`, values)
+                        .then((res) => {
+                            if (res.data.status) {
+                                localStorage.setItem('user', res.data.token);
+                                setMsg({ sucess: res.data.message });
+                                navigate('/');
+                                setStatus({ success: true });
+                            } else {
+                                setMsg({ error: res.data.message });
+                            }
+                        })
+                        .catch((error) => {
+                            setMsg({ error: error });
+                        });
                 }}
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -244,4 +260,4 @@ const FirebaseLogin = ({ ...others }) => {
     );
 };
 
-export default FirebaseLogin;
+export default Login;

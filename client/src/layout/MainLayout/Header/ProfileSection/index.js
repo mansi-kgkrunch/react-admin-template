@@ -56,7 +56,11 @@ const ProfileSection = () => {
      * */
     const anchorRef = useRef(null);
     const handleLogout = async () => {
-        console.log('Logout');
+        
+        if (window.confirm("Sure want to log out?")) {
+            localStorage.clear();
+            navigate('/login');
+          }
     };
 
     const handleClose = (event) => {

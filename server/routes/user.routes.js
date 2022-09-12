@@ -5,7 +5,6 @@ import bodyParser from "body-parser";
 import multer from "multer";
 import UserController from "../controllers/UserController.js";
 import auth from "../middleware/auth.js";
-import customer from "../middleware/customer.js";
 
 const route = express.Router();
 

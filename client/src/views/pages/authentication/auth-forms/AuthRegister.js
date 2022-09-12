@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Axios from 'axios';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -21,6 +22,7 @@ import {
     Typography,
     useMediaQuery
 } from '@mui/material';
+import Alert from '@mui/material/Alert';
 
 // third party
 import * as Yup from 'yup';
@@ -31,6 +33,7 @@ import useScriptRef from 'hooks/useScriptRef';
 import Google from 'assets/images/icons/social-google.svg';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import env from '../../../../env.json';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
@@ -38,13 +41,15 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
-const FirebaseRegister = ({ ...others }) => {
+const Register = ({ ...others }) => {
     const theme = useTheme();
     const scriptedRef = useScriptRef();
+    const navigate = useNavigate();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
     const customization = useSelector((state) => state.customization);
     const [showPassword, setShowPassword] = useState(false);
     const [checked, setChecked] = useState(true);
+    const [msg, setMsg] = useState({});
 
     const [strength, setStrength] = useState(0);
     const [level, setLevel] = useState();
@@ -52,6 +57,8 @@ const FirebaseRegister = ({ ...others }) => {
     const googleHandler = async () => {
         console.error('Register');
     };
+
+    // register
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -74,7 +81,7 @@ const FirebaseRegister = ({ ...others }) => {
     return (
         <>
             <Grid container direction="column" justifyContent="center" spacing={2}>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                     <AnimateButton>
                         <Button
                             variant="outlined"
@@ -93,7 +100,7 @@ const FirebaseRegister = ({ ...others }) => {
                             Sign up with Google
                         </Button>
                     </AnimateButton>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12}>
                     <Box sx={{ alignItems: 'center', display: 'flex' }}>
                         <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
@@ -123,31 +130,38 @@ const FirebaseRegister = ({ ...others }) => {
                     </Box>
                 </Grid>
             </Grid>
-
+            {msg.sucess ? <Alert severity="success">{msg.sucess}</Alert> : ''}
+            {msg.error ? <Alert severity="error">{msg.error}</Alert> : ''}
             <Formik
                 initialValues={{
                     email: '',
                     password: '',
-                    submit: null
+                    fname: '',
+                    lname: ''
                 }}
                 validationSchema={Yup.object().shape({
                     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-                    try {
-                        if (scriptedRef.current) {
-                            setStatus({ success: true });
-                            setSubmitting(false);
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        if (scriptedRef.current) {
-                            setStatus({ success: false });
-                            setErrors({ submit: err.message });
-                            setSubmitting(false);
-                        }
-                    }
+                    Axios.post(`${env.API_URL}/user/register`, values)
+                        .then((res) => {
+                            if (res.data.status) {
+                                setTimeout(() => {
+                                    navigate('/login');
+                                    // navigate('/admin')
+                                }, 1500);
+
+                                setStatus({ success: true });
+                                setMsg({ sucess: res.data.message });
+                            } else {
+                                setMsg({ error: res.data.message });
+                            }
+                        })
+                        .catch((error) => {
+                            setMsg({ error: error });
+                            // dispatch(setToast({ type: 'error', message: error.message }));
+                        });
                 }}
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -159,6 +173,8 @@ const FirebaseRegister = ({ ...others }) => {
                                     label="First Name"
                                     margin="normal"
                                     name="fname"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
                                     type="text"
                                     defaultValue=""
                                     sx={{ ...theme.typography.customInput }}
@@ -169,6 +185,8 @@ const FirebaseRegister = ({ ...others }) => {
                                     fullWidth
                                     label="Last Name"
                                     margin="normal"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
                                     name="lname"
                                     type="text"
                                     defaultValue=""
@@ -303,4 +321,4 @@ const FirebaseRegister = ({ ...others }) => {
     );
 };
 
-export default FirebaseRegister;
+export default Register;

@@ -17,7 +17,7 @@ const utilities = {
             id: 'user',
             title: 'User',
             type: 'item',
-            url: '/sample-page',
+            url: '/user',
             icon: icons.IconUser,
             breadcrumbs: false
         }

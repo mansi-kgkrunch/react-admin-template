@@ -1,4 +1,3 @@
-import Validate from "../validation/validate.js";
 import User from "../models/User.model.js";
 import { unlink } from "fs";
 import bcrypt from "bcrypt";
@@ -13,89 +12,74 @@ export default class UserController {
   /*----------------------- Register User Data   -----------------------*/
 
   static async register(req, res) {
-    var errors = Validate.register(req.body);
-    if (req.files !== undefined) {
-      var files = req.files.images;
-      var images = _.first(files);
-      var user_image = {
-        name: images.filename,
-        path: `${images.destination}/${images.filename}`,
-      };
-    } else {
-      var user_image = {};
-    }
-
-    if (errors.status) {
-      try {
-        var newPassword = await bcrypt.hash(req.body.password, 10);
-        await User.create({
-          username: req.body.username,
-          email: toLower(req.body.email),
-          password: newPassword,
-          images: user_image,
-        });
-        res.json({
-          status: true,
-          message: "User Created Successfully",
-        });
-      } catch (error) {
-        // console.log(error);
-        res.json({
-          status: false,
-          message: "Email Already in Use",
-        });
-      }
-    } else {
-      res.json(errors);
+    console.log(req.body ,"jghj");
+    try {
+      var newPassword = await bcrypt.hash(req.body.password, 10);
+      await User.create({
+        fname: toLower(req.body.fname),
+        lname: toLower(req.body.lname),
+        email: toLower(req.body.email),
+        password: newPassword,
+      });
+      res.json({
+        status: true,
+        message: "User Created Successfully",
+      });
+    } catch (error) {
+      // console.log(error);
+      res.json({
+        status: false,
+        message: "Email Already in Use",
+      });
     }
   }
 
   /*----------------------- Login User Data -----------------------*/
 
   static async login(req, res) {
-    // console.log(req.body)
-    var errors = Validate.login(req.body);
-    if (errors.status) {
-      const user = await User.findOne({
-        email: toLower(req.body.email),
+    console.log(req.body);
+    // var errors = Validate.login(req.body);
+    // if (errors.status) {
+    const user = await User.findOne({
+      email: toLower(req.body.email),
+    });
+    if (!user) {
+      res.json({
+        status: false,
+        message: "Invalid User , Please try again !!",
       });
-      if (!user) {
+    } else {
+      const PassConfirm = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (PassConfirm) {
+        const token = Jwt.sign(
+          {
+            username: user.username,
+            email: user.email,
+            image: user.images,
+          },
+          process.env.JWT_KEY,
+          {
+            expiresIn: 60 * process.env.JWT_TIME,
+          }
+        );
         res.json({
-          status: false,
-          message: "Invalid User , Please try again !!",
+          status: true,
+          message: "User Logged In Successfully",
+          token: token,
         });
       } else {
-        const PassConfirm = await bcrypt.compare(
-          req.body.password,
-          user.password
-        );
-        if (PassConfirm) {
-          const token = Jwt.sign(
-            {
-              username: user.username,
-              email: user.email,
-              image: user.images,
-            },
-            process.env.JWT_KEY,
-            {
-              expiresIn: 60 * process.env.JWT_TIME,
-            }
-          );
-          res.json({
-            status: true,
-            message: "User Logged In Successfully",
-            token: token,
-          });
-        } else {
-          res.json({
-            status: false,
-            message: "Somthing Wrong !!",
-          });
-        }
+        res.json({
+          status: false,
+          message: "Somthing Wrong !!",
+        });
       }
-    } else {
-      res.json(errors);
     }
+    // } else {
+    //   res.json(errors);
+    // }
   }
 
   /*----------------------- Check Admin User Data -----------------------*/
