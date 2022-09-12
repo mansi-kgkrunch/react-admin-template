@@ -12,7 +12,6 @@ export default class UserController {
   /*----------------------- Register User Data   -----------------------*/
 
   static async register(req, res) {
-    console.log(req.body ,"jghj");
     try {
       var newPassword = await bcrypt.hash(req.body.password, 10);
       await User.create({
@@ -37,7 +36,6 @@ export default class UserController {
   /*----------------------- Login User Data -----------------------*/
 
   static async login(req, res) {
-    console.log(req.body);
     // var errors = Validate.login(req.body);
     // if (errors.status) {
     const user = await User.findOne({
