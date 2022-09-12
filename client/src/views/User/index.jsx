@@ -4,6 +4,7 @@ import { Typography } from '@mui/material';
 import { Button, FormControlLabel, Grid, Radio, RadioGroup, styled } from '@mui/material';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
 import { DataGrid } from '@mui/x-data-grid';
+import { IconTrash } from '@tabler/icons';
 
 //project import
 import MainCard from 'ui-component/cards/MainCard';
@@ -31,7 +32,6 @@ const User = () => {
                 res => {
                     if (res.data.status) {
                         setUserState(res.data.user)
-                        console.log(res.data.user);
                         // dispatch(setToast({ type: "success", message: res.data.message }))
                     } else {
                         // dispatch(setToast({ type: "error", message: res.data.message }))
@@ -45,6 +45,37 @@ const User = () => {
     useEffect(() => {
         getUser();
     }, [getUser])
+
+    function deletehandle(id) {
+        Axios.delete(`${env.API_URL}/user/del/${id}`, {
+            headers: {
+                "x-access-token": localStorage.getItem("user") || "",
+            },
+        })
+            .then((res) => {
+                alert(res.data.message);
+                if (res.data.status) {
+                    dispatch(
+                        setToast({
+                            type: "success",
+                            message: res.data.message,
+                        })
+                    );
+                    getUser();
+                } else {
+                    dispatch(
+                        setToast({
+                            type: "error",
+                            message: res.data.message,
+                        })
+                    );
+                }
+            })
+            .catch((error) => {
+                dispatch(setToast({ type: "error", message: error.message }));
+            });
+    }
+
     const columns = [
         { field: '_id', headerName: 'ID', width: 230 },
         { field: 'fname', headerName: 'First name', width: 230 },
@@ -75,7 +106,7 @@ const User = () => {
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
-                    getRowId={(row) =>  row._id}
+                    getRowId={(row) => row._id}
                 />
             </div>
         </MainCard>
