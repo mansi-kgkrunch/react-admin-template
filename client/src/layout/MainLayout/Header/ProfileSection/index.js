@@ -33,7 +33,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
 
 // assets
@@ -158,7 +157,7 @@ const ProfileSection = () => {
                         <Paper>
                             <ClickAwayListener onClickAway={handleClose}>
                                 <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
-                                    <Box sx={{ p: 2 }}>
+                                    {/* <Box sx={{ p: 2 }}>
                                         <Stack>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
                                                 <Typography variant="h4">Good Morning,</Typography>
@@ -167,8 +166,8 @@ const ProfileSection = () => {
                                                 </Typography>
                                             </Stack>
                                             <Typography variant="subtitle2">Project Admin</Typography>
-                                        </Stack>
-                                        <OutlinedInput
+                                        </Stack> */}
+                                        {/* <OutlinedInput
                                             sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
                                             id="input-search-profile"
                                             value={value}
@@ -184,19 +183,18 @@ const ProfileSection = () => {
                                                 'aria-label': 'weight'
                                             }}
                                         />
-                                        <Divider />
-                                    </Box>
+                                        <Divider /> */}
+                                    {/* </Box> */}
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                                         <Box sx={{ p: 2 }}>
-                                            <UpgradePlanCard />
-                                            <Divider />
-                                            <Card
+                                            {/* <Divider /> */}
+                                            {/* <Card
                                                 sx={{
                                                     bgcolor: theme.palette.primary.light,
                                                     my: 2
                                                 }}
-                                            >
-                                                <CardContent>
+                                            > */}
+                                                {/* <CardContent>
                                                     <Grid container spacing={3} direction="column">
                                                         <Grid item>
                                                             <Grid item container alignItems="center" justifyContent="space-between">
@@ -230,9 +228,9 @@ const ProfileSection = () => {
                                                             </Grid>
                                                         </Grid>
                                                     </Grid>
-                                                </CardContent>
-                                            </Card>
-                                            <Divider />
+                                                </CardContent> */}
+                                            {/* </Card> */}
+                                            {/* <Divider /> */}
                                             <List
                                                 component="nav"
                                                 sx={{
@@ -249,7 +247,7 @@ const ProfileSection = () => {
                                                     }
                                                 }}
                                             >
-                                                <ListItemButton
+                                                {/* <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 0}
                                                     onClick={(event) => handleListItemClick(event, 0, '/user/account-profile/profile1')}
@@ -286,7 +284,7 @@ const ProfileSection = () => {
                                                             </Grid>
                                                         }
                                                     />
-                                                </ListItemButton>
+                                                </ListItemButton> */}
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 4}

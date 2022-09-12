@@ -21,6 +21,7 @@ const TextField = styled(TextValidator)(() => ({
 
 const User = () => {
 
+    document.title = `User | ${env.APP_NAME}`;
     const [users, setUserState] = useState([]);
     const getUser = useCallback(() => {
         Axios.get(`${env.API_URL}/user`, {
@@ -97,8 +98,8 @@ const User = () => {
     ];
 
     return (
-        <MainCard title="Sample Card">
-            <Typography variant="h5">User Form</Typography>
+        <MainCard title="User">
+            <Typography variant="h5">User List</Typography>
             <div style={{ height: 400, width: '100%' }}>
                 <DataGrid
                     rows={users}

@@ -58,7 +58,8 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const EarningCard = ({ isLoading }) => {
     const theme = useTheme();
-
+    const user = localStorage.getItem('userAuth');
+    const usersData = JSON.parse(user);
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -88,6 +89,17 @@ const EarningCard = ({ isLoading }) => {
                                             }}
                                         >
                                             DASHBOARD
+                                        </Typography>
+                                        <Typography
+                                            variant="h1"
+                                            sx={{
+                                                // fontSize: '1rem',
+                                                marginTop: '10px',
+                                                fontWeight: 500,
+                                                color: theme.palette.secondary[200]
+                                            }}
+                                        >
+                                            Welcome {usersData.email} to KGkrunch Dashboard
                                         </Typography>
                                     </Grid>
                                 </Grid>
