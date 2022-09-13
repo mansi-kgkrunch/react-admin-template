@@ -1,6 +1,6 @@
-# Node With React Ecommecre Site
+# Node With React Admin Template Site
 
-This is React-Admin-Template for app with React js frontend and Node js Backend <br>
+This is React-Admin-Template for app with React js with Material ui frontend and Node js Backend <br>
 Node.js is used as Api Backend And Frontend is React.js
 
 ## Requirements
@@ -9,13 +9,8 @@ Node.js is used as Api Backend And Frontend is React.js
 
 ## Setup database
 
-create database Ecommerce and
+create database admin and
 import Collection file into your database
-
-### Setup Server Storage
-
-storage.zip unzip in a server
-storage/public/images/ and folders
 
 ### Run This Command To Install All Components
 
@@ -38,7 +33,7 @@ Then _Create_ Your own **.env** file there is **.env.example** for reference
 Download the code
 
 ```
-git clone https://github.com/mansi-kgkrunch/ecommerce.git
+git clone https://github.com/mansi-kgkrunch/react-admin-template.git
 ```
 
 Install modules and dependencies
